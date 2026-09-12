@@ -39,14 +39,7 @@ if (!authHeader || !authHeader.startsWith('Bearer ')) {
 
 const token = authHeader.split(' ')[1];
 
-  // Reject demo token in production
-  if (process.env.NODE_ENV !== 'development' && token === 'demo_token') {
-    res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Demo token is not allowed in production.'
-    });
-    return;
-  }
+
 
   // Verify token using Supabase admin API when service role key is available
   if (supabaseClient) {
@@ -92,7 +85,7 @@ const token = authHeader.split(' ')[1];
         };
       } else {
         req.user = {
-          id: token === 'demo_token' ? 'demo-judge-user' : `usr_${token.slice(0, 10)}`,
+          id: `usr_${token.slice(0, 10)}`,
           email: 'operator@aurorashield.ai',
           role: 'compliance_officer'
         };
