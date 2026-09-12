@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <rect width="600" height="400" rx="20" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+
+  <!-- Back Panel Title -->
+  <rect x="20" y="15" width="560" height="30" fill="#0f172a" rx="4"/>
+  <text x="30" y="35" font-family="'Space Grotesk', sans-serif" font-size="14" font-weight="bold" fill="#38bdf8">STATUTORY DECLARATION PANEL • PRODUCT OF INDIA</text>
+
+  <!-- Ingredients Block -->
+  <text x="30" y="70" font-family="sans-serif" font-size="11" font-weight="bold" fill="#f8fafc">INGREDIENTS:</text>
+  <text x="30" y="86" font-family="sans-serif" font-size="9.5" fill="#cbd5e1" width="540">
+    Refined Wheat Flour (Maida) (58%), Sugar, Edible Vegetable Oil (Palm), Butter (2.5%), Milk Solids (1.8%),
+  </text>
+  <text x="30" y="100" font-family="sans-serif" font-size="9.5" fill="#cbd5e1">
+    Invert Sugar Syrup, Raising Agents [503(ii), 500(ii)], Iodised Salt, Emulsifiers [322, 471].
+  </text>
+  <text x="30" y="116" font-family="sans-serif" font-size="9.5" font-weight="bold" fill="#facc15">
+    ALLERGEN DECLARATION: CONTAINS WHEAT (GLUTEN) AND MILK. MAY CONTAIN TRACES OF SOYA.
+  </text>
+
+  <!-- Discrepant Quantity Box (Special Promo Pack) -->
+  <rect x="30" y="135" width="260" height="50" rx="6" fill="#450a0a" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="42" y="155" font-family="'Space Grotesk', sans-serif" font-size="13" font-weight="bold" fill="#fca5a5">Net Weight: 120g (Special Promo Pack)</text>
+  <text x="42" y="172" font-family="sans-serif" font-size="10" fill="#f87171">[Discrepancy: Front declares 100g]</text>
+
+  <!-- Dates and Batch -->
+  <rect x="310" y="135" width="260" height="50" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+  <text x="322" y="153" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#94a3b8">Mfg Date: 15/05/2026 | Exp: 14/11/2026</text>
+  <text x="322" y="171" font-family="'Space Grotesk', sans-serif" font-size="11" fill="#38bdf8">Batch No: GD-2026-B89</text>
+
+  <!-- FSSAI & Manufacturer Details -->
+  <line x1="30" y1="205" x2="570" y2="205" stroke="#334155" stroke-width="1"/>
+
+  <rect x="30" y="215" width="130" height="35" rx="4" fill="#0284c7"/>
+  <text x="95" y="238" font-family="'Outfit', sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">fssai</text>
+  <text x="175" y="235" font-family="'Space Grotesk', sans-serif" font-size="12" font-weight="bold" fill="#ffffff">Lic. No. 10015043001129</text>
+
+  <!-- Mfg By -->
+  <text x="30" y="275" font-family="sans-serif" font-size="10" font-weight="bold" fill="#f8fafc">Manufactured by:</text>
+  <text x="30" y="292" font-family="sans-serif" font-size="10" fill="#94a3b8">Britannia Industries Ltd., 5/1A Hungerford Street, Kolkata 700017, West Bengal, India.</text>
+
+  <!-- Consumer Care -->
+  <text x="30" y="325" font-family="sans-serif" font-size="10" font-weight="bold" fill="#38bdf8">Consumer Care Toll Free: 1800-425-4449 | feedback@britbc.com</text>
+
+  <!-- Storage -->
+  <text x="30" y="355" font-family="sans-serif" font-size="9" fill="#64748b">Store in a cool, dry and hygienic place away from direct sunlight.</text>
+</svg>
