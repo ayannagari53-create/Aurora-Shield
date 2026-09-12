@@ -29,17 +29,20 @@ export async function authMiddleware(req, res, next) {
         });
         return;
     }
-    // If Supabase keys are configured in environment, verify with Supabase Auth
+    // Verify token using Supabase admin API when service role key is available
     if (supabaseClient) {
         try {
-            const { data, error } = await supabaseClient.auth.getUser(token);
+            // The admin API validates any user token without needing the user to be logged in via the client SDK
+            const { data, error } = await supabaseClient.auth.admin.getUser(token);
             if (error || !data.user) {
+                console.log('Supabase admin verification failed:', error?.message || 'no user');
                 res.status(401).json({
                     error: 'Unauthorized',
                     message: 'Session invalid or expired. Please re-authenticate.'
                 });
                 return;
             }
+            console.log('Supabase admin verification succeeded for user ID:', data.user.id);
             req.user = {
                 id: data.user.id,
                 email: data.user.email,
@@ -49,6 +52,7 @@ export async function authMiddleware(req, res, next) {
             return;
         }
         catch (err) {
+            console.error('Error during Supabase admin verification:', err);
             res.status(401).json({
                 error: 'Unauthorized',
                 message: 'Authentication token verification failed.'
