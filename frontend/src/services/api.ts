@@ -23,6 +23,8 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     ...(options.headers as Record<string, string> || {}),
     Authorization: `Bearer ${token}`
   };
+  // Debug log (token value not printed)
+  console.log('API request', endpoint, 'Authorization header set');
 
   // Set application/json only if not FormData and Content-Type not already provided
   if (!(options.body instanceof FormData) && !headers['Content-Type']) {

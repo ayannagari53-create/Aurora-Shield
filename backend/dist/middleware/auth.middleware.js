@@ -6,7 +6,14 @@ if (config.supabaseUrl && config.supabaseServiceRoleKey) {
 }
 export async function authMiddleware(req, res, next) {
     const authHeader = req.headers.authorization;
+    // Diagnostic logging for auth debugging (do not log token value)
+    console.log('--- Auth Middleware Debug ---');
+    console.log('Authorization header present:', !!authHeader);
+    if (authHeader) {
+        console.log('Header starts with Bearer:', authHeader.startsWith('Bearer '));
+    }
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        console.log('Missing or malformed Authorization header');
         res.status(401).json({
             error: 'Unauthorized',
             message: 'Missing or invalid Authorization header. Expected Bearer token.'

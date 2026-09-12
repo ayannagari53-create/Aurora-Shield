@@ -21,16 +21,23 @@ export async function authMiddleware(
   next: NextFunction
 ): Promise<void> {
   const authHeader = req.headers.authorization;
+// Diagnostic logging for auth debugging (do not log token value)
+console.log('--- Auth Middleware Debug ---');
+console.log('Authorization header present:', !!authHeader);
+if (authHeader) {
+  console.log('Header starts with Bearer:', authHeader.startsWith('Bearer '));
+}
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({
-      error: 'Unauthorized',
-      message: 'Missing or invalid Authorization header. Expected Bearer token.'
-    });
-    return;
-  }
+if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  console.log('Missing or malformed Authorization header');
+  res.status(401).json({
+    error: 'Unauthorized',
+    message: 'Missing or invalid Authorization header. Expected Bearer token.'
+  });
+  return;
+}
 
-  const token = authHeader.split(' ')[1];
+const token = authHeader.split(' ')[1];
 
   // Reject demo token in production
   if (process.env.NODE_ENV !== 'development' && token === 'demo_token') {
