@@ -98,6 +98,35 @@ export class PdfReportService {
                         .text(fssaiVal, 400, y + 40, { width: 140 });
                     y += 80;
                 }
+                // --- PRODUCT INSIGHTS (USES, BENEFITS, WARNINGS, DISADVANTAGES) ---
+                if (data?.productInsights) {
+                    if (y > 580) {
+                        doc.addPage();
+                        y = 45;
+                    }
+                    doc.fontSize(12).fillColor(primaryColor).text('Product Intelligence Insights', 45, y);
+                    y += 16;
+                    const insights = data.productInsights;
+                    const uText = insights.uses?.map(u => `• ${u.text}`).join('\n') || '• Standard packaged commodity usage.';
+                    const bText = insights.benefits?.map(b => `• ${b.text}`).join('\n') || '• Sealed statutory packaging.';
+                    const wText = insights.warnings?.map(w => `• ${w.text}`).join('\n') || '• No specific hazard warnings detected.';
+                    const dText = [...(insights.disadvantages || []), ...(insights.limitations || [])].map(d => `• ${d.text}`).join('\n') || '• Standard dietary/application boundaries apply.';
+                    // 4 Grid blocks or stacked cards
+                    doc.rect(45, y, 245, 60).fill('#F0FDF4').stroke('#BBF7D0');
+                    doc.fontSize(8).fillColor('#166534').text('🎯 USES & APPLICATIONS', 52, y + 6);
+                    doc.fontSize(7.5).fillColor(darkGray).text(uText, 52, y + 18, { width: 230, height: 38, lineGap: 1 });
+                    doc.rect(305, y, 245, 60).fill('#EFF6FF').stroke('#BFDBFE');
+                    doc.fontSize(8).fillColor('#1E40AF').text('✅ BENEFITS & ADVANTAGES', 312, y + 6);
+                    doc.fontSize(7.5).fillColor(darkGray).text(bText, 312, y + 18, { width: 230, height: 38, lineGap: 1 });
+                    y += 66;
+                    doc.rect(45, y, 245, 60).fill('#FEF2F2').stroke('#FECDD3');
+                    doc.fontSize(8).fillColor('#991B1B').text('⚠️ WARNINGS & PRECAUTIONS', 52, y + 6);
+                    doc.fontSize(7.5).fillColor(darkGray).text(wText, 52, y + 18, { width: 230, height: 38, lineGap: 1 });
+                    doc.rect(305, y, 245, 60).fill('#FFFBEB').stroke('#FDE68A');
+                    doc.fontSize(8).fillColor('#92400E').text('➖ DISADVANTAGES & LIMITATIONS', 312, y + 6);
+                    doc.fontSize(7.5).fillColor(darkGray).text(dText, 312, y + 18, { width: 230, height: 38, lineGap: 1 });
+                    y += 72;
+                }
                 // --- HUMAN VERIFICATION AUDIT ---
                 doc.fontSize(12).fillColor(primaryColor).text('Human Verification Audit Trail', 45, y);
                 y += 16;

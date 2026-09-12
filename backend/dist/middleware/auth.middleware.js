@@ -14,6 +14,14 @@ export async function authMiddleware(req, res, next) {
         return;
     }
     const token = authHeader.split(' ')[1];
+    // Reject demo token in production
+    if (process.env.NODE_ENV !== 'development' && token === 'demo_token') {
+        res.status(401).json({
+            error: 'Unauthorized',
+            message: 'Demo token is not allowed in production.'
+        });
+        return;
+    }
     // If Supabase keys are configured in environment, verify with Supabase Auth
     if (supabaseClient) {
         try {
@@ -41,33 +49,38 @@ export async function authMiddleware(req, res, next) {
             return;
         }
     }
-    // Fallback for local evaluation prior to Supabase credentials injection
-    // Accepts authentic Supabase JWT or client session tokens
-    try {
-        // Basic JWT structure verification (header.payload.signature)
-        const parts = token.split('.');
-        if (parts.length === 3) {
-            const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
-            req.user = {
-                id: payload.sub || payload.id || 'usr_session_active',
-                email: payload.email || 'operator@aurorashield.ai',
-                role: payload.role || 'compliance_officer'
-            };
+    // Fallback for local development only – do NOT accept arbitrary JWTs in production
+    if (process.env.NODE_ENV === 'development') {
+        try {
+            const parts = token.split('.');
+            if (parts.length === 3) {
+                const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+                req.user = {
+                    id: payload.sub || payload.id || 'usr_session_active',
+                    email: payload.email || 'operator@aurorashield.ai',
+                    role: payload.role || 'compliance_officer'
+                };
+            }
+            else {
+                req.user = {
+                    id: token === 'demo_token' ? 'demo-judge-user' : `usr_${token.slice(0, 10)}`,
+                    email: 'operator@aurorashield.ai',
+                    role: 'compliance_officer'
+                };
+            }
+            next();
         }
-        else {
-            // Local dev token
-            req.user = {
-                id: token === 'demo_token' ? 'demo-judge-user' : `usr_${token.slice(0, 10)}`,
-                email: 'operator@aurorashield.ai',
-                role: 'compliance_officer'
-            };
+        catch (e) {
+            res.status(401).json({
+                error: 'Unauthorized',
+                message: 'Malformed authorization token.'
+            });
         }
-        next();
+        return;
     }
-    catch (e) {
-        res.status(401).json({
-            error: 'Unauthorized',
-            message: 'Malformed authorization token.'
-        });
-    }
+    // If we reach here, no valid auth method available
+    res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Authentication required.'
+    });
 }

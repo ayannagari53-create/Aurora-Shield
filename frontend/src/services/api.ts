@@ -1,22 +1,35 @@
-import { AuthService } from './auth';
+import { AuthService, supabase } from './auth';
 import { ComplianceScanRecord, LabelAngle, ReportItem, StructuredProductData } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
+async function getValidToken(): Promise<string> {
+  // Prefer Supabase SDK session which automatically refreshes when needed
+  if (supabase) {
+    const { data, error } = await supabase.auth.getSession();
+    if (!error && data.session?.access_token) {
+      return data.session.access_token;
+    }
+  }
+  // Fallback to locally stored token (only for non‑Supabase dev mode)
+  const token = AuthService.getToken();
+  if (!token) throw new Error('No authentication token available');
+  return token;
+}
+
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-  const token = AuthService.getToken() || 'demo_token';
+  const token = await getValidToken();
   const headers: Record<string, string> = {
-    ...(options.headers as Record<string, string> || {})
+    ...(options.headers as Record<string, string> || {}),
+    Authorization: `Bearer ${token}`
   };
 
-  if (!headers['Authorization']) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  // Set application/json only if not FormData
+  // Set application/json only if not FormData and Content-Type not already provided
   if (!(options.body instanceof FormData) && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
   }
+
+
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
@@ -103,7 +116,8 @@ export const scanApi = {
     request<{ success: boolean; reports: ReportItem[]; total: number }>('/api/reports'),
 
   getReportPdfBlobUrl: async (scanId: string): Promise<string> => {
-    const token = AuthService.getToken() || 'demo_token';
+    // token obtained via getValidToken below
+    const token = await getValidToken();
     const res = await fetch(`${API_BASE_URL}/api/reports/${scanId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
